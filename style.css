@@ -4,3 +4,5 @@
 @media(prefers-reduced-motion:reduce){.spot i,#nextBtn b,#loading span{animation:none}#tint{transition:none}}
 
 .chapter-shortcut{display:block;margin-top:18px;color:#dbc6b2;font-size:11px;letter-spacing:.13em;border-bottom:1px solid #dfbea14d;padding:0 0 6px}.chapter-shortcut:hover{color:#fff0cd}#quietPanel{background:linear-gradient(transparent,#231d2d70,transparent);padding:15px 0}#quietWords{line-height:1.9;margin-left:5%;margin-right:5%}
+
+.quiet-actions{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:12px;padding:0 20px}#quietNextAct{padding:11px 19px;background:#ead9ba;color:#3a3040;border:1px solid #f5deb7;box-shadow:3px 3px 0 #241d2e;font-size:12px;letter-spacing:.1em}#quietNextAct:hover{background:#fff0cd}

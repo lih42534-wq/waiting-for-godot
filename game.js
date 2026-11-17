@@ -21,7 +21,7 @@ function chapter(act){state.act=act;state.trainStart=null;state.passenger=false;
 function enterAct(){
  ui.hide('chapterCard');$('pauseBtn').disabled=false;
  if(state.act===1){talk([line('我','他只说，在这座车站见。'),line('我','没有说哪一班车，也没有说，几点。',1),line('风','树叶翻了个身。长椅另一头，空着。'),line('我','那就……先坐一会儿吧。')],explore)}
- else {state.tea=false;state.mode='arrival';state.trainStart=state.elapsed;state.passenger=false;ui.show('quietPanel');$('quietWords').textContent='这一次，远处传来的不只是风。';$('quietFill').style.width='0%';$('quietEnd').textContent='略过进站动画 →';trainSound();}
+ else {ui.hide('quietNextAct');state.tea=false;state.mode='arrival';state.trainStart=state.elapsed;state.passenger=false;ui.show('quietPanel');$('quietWords').textContent='这一次，远处传来的不只是风。';$('quietFill').style.width='0%';$('quietEnd').textContent='略过进站动画 →';trainSound();}
 }
 function finishArrival(){
  if(state.mode!=='arrival')return;
@@ -78,7 +78,8 @@ function leave(){if(state.mode!=='explore'||state.visited.size<3)return;if(state
  ]}],showEnding)}}
 function finishChoice(answer,reply){talk([line('我',answer,2),line('旅客',reply,2),line('夜色','绿皮车静静停着。我们各自捧着杯子，谁也没有催谁。')],()=>{note('reply',reply);showEnding()})}
 function showEnding(){state.mode='ending';state.head=0;['dialogue','hotspots','exploreHint'].forEach(ui.hide);$('ending').querySelector('h2').innerHTML=state.choice==='walk'?'明天，<br>去别处走走。':state.choice==='unsure'?'明天，<br>也可以慢慢想。':'明天，<br>我带两杯茶。';$('endingNote').textContent=`两个黄昏，留下了 ${state.notes.length} 个片刻。`;ui.show('ending')}
-function quiet(){if(state.mode!=='explore')return;state.mode='quiet';state.quietTime=state.elapsed;state.quietDone=false;$('quietEnd').textContent='继续坐着，或回到故事 →';['hotspots','exploreHint'].forEach(ui.hide);ui.show('quietPanel');$('quietWords').textContent='这十二秒，什么也不用做好。';$('quietFill').style.width='0%'}
+function quiet(){if(state.mode!=='explore')return;$('quietNextAct').hidden=state.act!==1;state.mode='quiet';state.quietTime=state.elapsed;state.quietDone=false;$('quietEnd').textContent='继续坐着，或回到故事 →';['hotspots','exploreHint'].forEach(ui.hide);ui.show('quietPanel');$('quietWords').textContent='这十二秒，什么也不用做好。';$('quietFill').style.width='0%'}
+function quietNextAct(){if(state.mode!=='quiet'||state.act!==1||state.paused||!$('journal').hidden)return;note('day1','天色暗下来了。明天，再来坐坐。');chapter(2)}
 function endQuiet(){if(state.mode==='arrival'){finishArrival();return}if(state.mode!=='quiet')return;explore()}
 function togglePause(force){if(['title','chapter'].includes(state.mode))return;state.paused=typeof force==='boolean'?force:!state.paused;$('pauseBtn').textContent=state.paused?'继续':'暂停';$('pauseBtn').setAttribute('aria-pressed',state.paused);state.paused?ui.show('pausePanel'):ui.hide('pausePanel');syncAudio()}
 // Gentle procedural ambience. No remote audio or network dependency.
@@ -143,7 +144,7 @@ function frame(now){const dt=Math.min((now-lastFrame)/1000||0,.08);if(audio?.tra
 function startGame(act){initAudio();if(audio){state.muted=false;audio.ac.resume().catch(()=>{});$('soundBtn').textContent='声音：开';$('soundBtn').setAttribute('aria-pressed','true');syncAudio()}chapter(act)}
 $('startBtn').onclick=()=>startGame(1);
 $('enterAct').onclick=()=>{chime();enterAct()};$('nextBtn').onclick=next;$('words').onclick=next;
-document.querySelectorAll('[data-place]').forEach(b=>b.onclick=()=>observe(b.dataset.place));$('leaveBtn').onclick=leave;$('quietBtn').onclick=quiet;$('quietEnd').onclick=endQuiet;$('soundBtn').onclick=soundToggle;$('pauseBtn').onclick=()=>togglePause();$('resumeBtn').onclick=()=>togglePause(false);
+document.querySelectorAll('[data-place]').forEach(b=>b.onclick=()=>observe(b.dataset.place));$('leaveBtn').onclick=leave;$('quietBtn').onclick=quiet;$('quietEnd').onclick=endQuiet;$('quietNextAct').onclick=quietNextAct;$('soundBtn').onclick=soundToggle;$('pauseBtn').onclick=()=>togglePause();$('resumeBtn').onclick=()=>togglePause(false);
 $('journalBtn').onclick=()=>{renderNotes();ui.show('journal')};$('closeJournal').onclick=()=>ui.hide('journal');$('stayBtn').onclick=()=>{ui.hide('ending');state.mode='explore';state.head=0;explore();$('exploreText').textContent='故事先停在这里。你可以再听一会儿风。';$('leaveBtn').textContent='回到结尾 →';$('leaveBtn').onclick=showEnding};$('restartBtn').onclick=()=>{state.notes=[];state.tea=false;state.choice='';$('noteCount').textContent='0';$('leaveBtn').onclick=leave;chapter(1)};
 document.addEventListener('keydown',e=>{if(e.code==='Escape'){e.preventDefault();if(!$('journal').hidden){ui.hide('journal');return}togglePause();return}if((e.code==='Space'||e.code==='Enter')&&!['BUTTON','INPUT','TEXTAREA'].includes(document.activeElement.tagName)){if(state.mode==='dialogue'){e.preventDefault();next()}}});document.addEventListener('visibilitychange',syncAudio);
 Promise.all([imageLoad('assets/station.png'),imageLoad('assets/station-clean.png'),imageLoad('assets/heads.png'),imageLoad('assets/green-train.png'),imageLoad('assets/traveler.png')]).then(images=>{[base,clean,headSheet,trainImage,travelerImage]=images;prepareLayers();state.loaded=true;ui.hide('loading')}).catch(err=>{$('loading').replaceChildren();const msg=document.createElement('p');msg.textContent='没能走到车站。请刷新页面再试一次。';$('loading').append(msg);console.error(err)});
