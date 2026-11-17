@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#211e30"><title>等待戈多</title><meta name="description" content="在一座小站度过两个黄昏。一个关于等待、孤独和温度的像素叙事游戏。"><link rel="stylesheet" href="style.css"></head>
+<body>
+<main id="game" aria-label="等待戈多，像素叙事游戏">
+ <div id="world"><canvas id="scene" width="960" height="540" aria-label="黄昏小站，主角背对镜头坐在长椅上。云持续漂移，枝叶随风摆动。第二幕有绿皮车进站和一位歇脚的中年旅客。"></canvas><div id="tint"></div><div class="vignette"></div></div>
+ <header id="hud" hidden><div class="chapter"><span id="actLabel">第一幕</span><span class="chapter-line"></span><span id="chapterName">今天还会来吗</span></div><nav aria-label="游戏设置"><button id="journalBtn" title="查看留下的片刻">手记 <span id="noteCount">0</span></button><button id="soundBtn" aria-pressed="false">声音：关</button><button id="pauseBtn" aria-pressed="false">暂停</button></nav></header>
+ <section id="titleScreen"><div class="title-inner"><h1>等待<br>戈多</h1><button id="startBtn" class="start">坐一会儿 <span>→</span></button></div></section>
+ <section id="chapterCard" hidden aria-live="polite"><span id="cardNumber">第一幕</span><h2 id="cardTitle">今天还会来吗</h2><p id="cardSub">同一个地方，第一次黄昏。</p><button id="enterAct">走进黄昏 →</button></section>
+ <div id="hotspots" hidden><button class="spot" id="skySpot" data-place="sky" style="--x:57%;--y:31%"><i></i><span>看一会儿云</span></button><button class="spot" id="treeSpot" data-place="tree" style="--x:86%;--y:43%"><i></i><span>听听树叶</span></button><button class="spot" id="seatSpot" data-place="seat" style="--x:51%;--y:72%"><i></i><span>身旁的空位</span></button></div>
+ <div id="exploreHint" hidden><p id="exploreText">不必着急。点一点风景，或只是坐一会儿。</p><div><button id="quietBtn">静坐片刻</button><button id="leaveBtn" hidden>天色晚了 →</button></div></div>
+ <section id="dialogue" hidden aria-label="对话"><div class="dialogue-top"><span id="speaker">我</span><span id="lineCounter"></span></div><p id="words" aria-live="polite"></p><div id="choices" hidden></div><button id="nextBtn" aria-label="继续对话"><span>继续</span> <b>⌄</b></button></section>
+ <div id="quietPanel" hidden><p id="quietWords">这十二秒，什么也不用做好。</p><div class="quiet-track"><i id="quietFill"></i></div><button id="quietEnd">继续坐着，或回到故事 →</button></div>
+ <aside id="journal" hidden aria-label="黄昏手记"><button id="closeJournal" aria-label="关闭手记">×</button><div class="eyebrow">POCKET NOTES</div><h2>留下的片刻</h2><p class="journal-intro">今天没有等到的，和今天遇见的。</p><div id="notes"></div></aside>
+ <section id="pausePanel" hidden><span class="eyebrow">风还在这里</span><h2>慢慢来。</h2><p>故事会等你。</p><button id="resumeBtn">回到长椅 →</button></section>
+ <section id="ending" hidden><div class="eyebrow">第二个黄昏之后</div><h2>明天，<br>我带两杯茶。</h2><p>戈多还没有来。<br>绿皮车静静停着。<br>身旁的人，陪你把茶喝完。</p><p id="endingNote"></p><div><button id="stayBtn">再坐一会儿</button><button id="restartBtn">重新经过这两个黄昏</button></div></section>
+ <div id="loading">正在走向小站<span>· · ·</span></div><div id="toast" role="status"></div>
+ <footer id="controls" hidden>点击风景探索 · 空格 / 回车继续 · Esc 暂停</footer>
+</main>
+<script src="game.js"></script>
+</body></html>
